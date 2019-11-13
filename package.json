@@ -1,14 +1,14 @@
 {
-  "name": "visualize",
+  "name": "petri-net",
   "version": "1.0.0",
-  "description": "",
+  "description": "Stochastic Petri net process with GUI output",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon --ignore 'data/*' server.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["petri nets"],
+  "author": "Misha Kushka",
   "license": "ISC",
   "dependencies": {
     "cytoscape": "^3.12.0",

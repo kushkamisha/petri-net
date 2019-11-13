@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <!-- For loading external data files -->
-    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Promise,fetch"></script>
-    <script src="./scripts/cytoscape.min.js"></script>
+    <script src="lib/cytoscape.min.js"></script>
+    <script src="lib/jquery.min.js"></script>
 
     <link href="styles/style.css" rel="stylesheet" />
 
@@ -20,11 +19,10 @@
     <div id="manageButtons">
         <button onclick="socket.send('launch')">Execute</button>
         <button onclick="socket.send('next')">Debug -> Next</button>
+        <input type="text" placeholder="iterations" maxlength="3" size="10" />
     </div>
 
-    <script src="scripts/jquery.min.js"></script>
     <script src="scripts/websocket.js"></script>
-
     <script src="scripts/draw.js"></script>
 </body>
 </html>

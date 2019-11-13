@@ -4,7 +4,7 @@ function draw(elements) {
 
         layout: {
             name: 'preset', //'grid'
-            padding: 50
+            padding: 100
         },
         
         style: [
