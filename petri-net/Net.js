@@ -3,7 +3,7 @@
 module.exports = class Net {
     constructor({ network, timeLimit }) {
         this.network = network
-        this.timeLimit = timeLimit ? timeLimit : 1
+        this.timeLimit = timeLimit ? timeLimit : 5
     }
 
     launch() {
@@ -33,7 +33,7 @@ module.exports = class Net {
         return validTransIds
     }
 
-    makeMove() {
+    makeMove(validTransIds) {
         for (const item of this.network) {
             if (!validTransIds.includes(item.trans.id)) continue
 
