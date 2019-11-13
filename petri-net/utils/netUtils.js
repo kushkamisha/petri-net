@@ -1,9 +1,9 @@
 'use strict'
 
 const fs = require('fs')
-const Place = require('./Place')
-const Arc = require('./Arc')
-const Transition = require('./Transition')
+const Place = require('../Place')
+const Arc = require('../Arc')
+const Transition = require('../Transition')
 
 module.exports = {
     getNetworkFromJSON: jsonName => {
@@ -72,5 +72,24 @@ module.exports = {
         }
 
         return net
+    },
+
+    rebuildClientData: (jsonName, netState) => {
+        const rawdata = fs.readFileSync(jsonName)
+        const data = JSON.parse(rawdata)
+
+        console.log(jsonName)
+
+        for (const node of data.nodes) {
+            const id = node.data.id
+            // If this is a place id
+            if (netState[id] !== undefined) {
+                if (netState[id] === 0) delete node.data.markers
+                else node.data.markers = netState[id]
+            }
+        }
+
+        // Rewrite client-data.json file
+        fs.writeFileSync(jsonName, JSON.stringify(data))
     }
 }

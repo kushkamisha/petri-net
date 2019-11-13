@@ -9,7 +9,16 @@ body {
     top: 0;
     right: 0;
     bottom: 0;
-    z-index: 999;
+    z-index: 1;
+}
+
+#manageButtons {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 20em;
+    height: 2em;
+    z-index: 2;
 }
 
 h1 {

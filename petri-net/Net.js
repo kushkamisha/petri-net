@@ -3,19 +3,32 @@
 module.exports = class Net {
     constructor({ network, timeLimit }) {
         this.network = network
-        this.timeLimit = timeLimit ? timeLimit : 5
+        this.netState = {} // object(place id <-> number of markers)
+        this.timeLimit = timeLimit ? timeLimit : 1
+    }
+
+    getNetState() {
+        for (const transition of this.network) {
+            for (const elem of transition.elems) {
+                this.netState[elem.place.id] = elem.place.markers
+            }
+        }
     }
 
     launch() {
+        this.getNetState()
+        console.log(this.netState)
+
         while(this.timeLimit > 0) {
             const validTransIds = this.getOnlyValidMoves()
-            console.dir(this.network, { depth: null })
+            // console.dir(this.network, { depth: null })
 
             this.makeMove(validTransIds)
-            console.dir(this.network, { depth: null })
 
             this.timeLimit--
         }
+
+        return this.netState
     }
 
     // @return ids of transitions that can be executed now
@@ -40,8 +53,10 @@ module.exports = class Net {
             for (const elem of item.elems) {
                 if (elem.arc.direction === 'in')
                     elem.place.markers -= elem.arc.weight
-                if (elem.arc.direction === 'out')
+                else if (elem.arc.direction === 'out')
                     elem.place.markers += elem.arc.weight
+                
+                this.netState[elem.place.id] = elem.place.markers
             }
         }
     }

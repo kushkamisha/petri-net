@@ -41,5 +41,11 @@ function draw(elements) {
     })
 }
 
+function makeModelMove() {
+    socket.send('move')
+    // $.ajax({ url: "/petri-data" })
+    //     .done(data => draw(data))
+}
+
 $.ajax({ url: "/petri-data" })
     .done(data => draw(data))
