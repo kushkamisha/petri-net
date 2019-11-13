@@ -1,7 +1,8 @@
 'use strict'
 
 module.exports = class Place {
-    constructor({ markers }) {
+    constructor({ id, markers }) {
+        this.id = id
         this.markers = markers
     }
 }
