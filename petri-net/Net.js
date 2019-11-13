@@ -5,6 +5,8 @@ module.exports = class Net {
         this.network = network
         this.netState = {} // object(place id <-> number of markers)
         this.timeLimit = timeLimit ? timeLimit : 1
+
+        this.getNetState()
     }
 
     getNetState() {
@@ -13,18 +15,24 @@ module.exports = class Net {
                 this.netState[elem.place.id] = elem.place.markers
             }
         }
+        // console.dir(this.netState, { depth: null })
     }
 
     launch() {
-        this.getNetState()
-        console.log(this.netState)
-
         while(this.timeLimit > 0) {
             const validTransIds = this.getOnlyValidMoves()
             // console.dir(this.network, { depth: null })
-
             this.makeMove(validTransIds)
+            this.timeLimit--
+        }
 
+        return this.netState
+    }
+    
+    next() {
+        if (this.timeLimit > 0) {
+            const validTransIds = this.getOnlyValidMoves()
+            this.makeMove(validTransIds)
             this.timeLimit--
         }
 

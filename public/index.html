@@ -18,7 +18,8 @@
     <div id="cy"></div>
 
     <div id="manageButtons">
-        <button onclick="makeModelMove()">Next</button>
+        <button onclick="socket.send('launch')">Execute</button>
+        <button onclick="socket.send('next')">Debug -> Next</button>
     </div>
 
     <script src="scripts/jquery.min.js"></script>

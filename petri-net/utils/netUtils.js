@@ -78,8 +78,6 @@ module.exports = {
         const rawdata = fs.readFileSync(jsonName)
         const data = JSON.parse(rawdata)
 
-        console.log(jsonName)
-
         for (const node of data.nodes) {
             const id = node.data.id
             // If this is a place id

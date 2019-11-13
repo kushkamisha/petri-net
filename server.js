@@ -3,9 +3,8 @@
 const fs = require('fs')
 const WebSocketServer = require('ws').Server
 const express = require('express')
-// const petriNet = require('./petri-net')
-const Net = require('./petri-net/Net')
-const { getNetworkFromJSON, rebuildClientData } = require('./petri-net/utils/netUtils')
+const { createNet } = require('./petri-net')
+const { rebuildClientData } = require('./petri-net/utils/netUtils')
 
 const app = express()
 const port = 3000
@@ -15,12 +14,15 @@ const getPetriNetForClient = filename => {
     return JSON.parse(rawdata)
 }
 
-app.use(express.static('public'))
+const changeAndSend = (filename, state, connection) => {
+    console.log({ state })
+    rebuildClientData(filename, state)
+    const data = getPetriNetForClient(filename)
 
-app.get('/petri-data', (req, res) => {
-    const data = getPetriNetForClient(__dirname + '/data/client-data.json')
-    res.send(data)
-})
+    connection.send(JSON.stringify(data))
+}
+
+app.use(express.static('public'))
 
 app.listen(port, () => console.log(`Listening on a port ${port}`))
 
@@ -31,22 +33,30 @@ const socket = new WebSocketServer({ port: 16804 })
 
 socket.on('connection', connection => {
 
+    const netFileName = `${__dirname}/data/client-data.json`
+    const net = createNet(netFileName, 5)
+
     connection.on('close', () => console.warn('Websocket is disconnected'))
 
     connection.on('message', msg => {
-        if (msg === 'move') {
-            const network = getNetworkFromJSON(`${__dirname}/data/client-data.json`)
-            const net = new Net({ network })
 
-            const state = net.launch()
-            console.log({ state })
-            rebuildClientData(`${__dirname}/data/client-data.json`, state)
-            const data = getPetriNetForClient(`${__dirname}/data/client-data.json`)
+        let state = {}
 
-            console.dir(data, { depth: null })
-            connection.send(JSON.stringify(data))
-        } else {
-            console.log(`Websocket msg: ${msg}`)
+        switch(msg) {
+            case 'net-data':
+                const clientNetwork = fs.readFileSync(netFileName, 'utf-8')
+                connection.send(clientNetwork)
+                break
+            case 'next':
+                state = net.next()
+                changeAndSend(netFileName, state, connection)
+                break
+            case 'launch':
+                state = net.launch()
+                changeAndSend(netFileName, state, connection)
+                break
+            default:
+                console.log(`Websocket msg: ${msg}`)
         }
     })
 })
