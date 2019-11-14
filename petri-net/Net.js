@@ -5,6 +5,8 @@ module.exports = class Net {
         this.network = network
         this.netState = {} // object(place id <-> number of markers)
         this.timeLimit = timeLimit ? timeLimit : 1
+        this.areMarkersConsumed = false
+        this.consumerIds = [] // Ids of trans that consumed markers on the step
 
         this.getNetState()
     }
@@ -21,9 +23,8 @@ module.exports = class Net {
     launch() {
         while(this.timeLimit > 0) {
             const validTransIds = this.getOnlyValidMoves()
-            // console.dir(this.network, { depth: null })
             this.makeMove(validTransIds)
-            this.timeLimit--
+            if (!this.areMarkersConsumed) this.timeLimit--
         }
 
         return this.netState
@@ -33,7 +34,7 @@ module.exports = class Net {
         if (this.timeLimit > 0) {
             const validTransIds = this.getOnlyValidMoves()
             this.makeMove(validTransIds)
-            this.timeLimit--
+            if (!this.areMarkersConsumed) this.timeLimit--
         }
 
         return this.netState
@@ -54,18 +55,41 @@ module.exports = class Net {
         return validTransIds
     }
 
-    makeMove(validTransIds) {
+    consume(validTransIds) {
         for (const item of this.network) {
             if (!validTransIds.includes(item.trans.id)) continue
+            this.consumerIds.push(item.trans.id)
 
             for (const elem of item.elems) {
-                if (elem.arc.direction === 'in')
+                if (elem.arc.direction === 'in') {
                     elem.place.markers -= elem.arc.weight
-                else if (elem.arc.direction === 'out')
-                    elem.place.markers += elem.arc.weight
-                
-                this.netState[elem.place.id] = elem.place.markers
+                    this.netState[elem.place.id] = elem.place.markers
+                }
             }
+        }
+    }
+
+    produce(validTransIds) {
+        for (const item of this.network) {
+            if (!validTransIds.includes(item.trans.id) &&
+                !this.consumerIds.includes(item.trans.id)) continue
+
+            for (const elem of item.elems) {
+                if (elem.arc.direction === 'out') {
+                    elem.place.markers += elem.arc.weight
+                    this.netState[elem.place.id] = elem.place.markers
+                }
+            }
+        }
+    }
+
+    makeMove(validTransIds) {
+        if (this.areMarkersConsumed) {
+            this.produce(validTransIds)
+            this.areMarkersConsumed = false
+        } else {
+            this.consume(validTransIds)
+            this.areMarkersConsumed = true
         }
     }
 }
