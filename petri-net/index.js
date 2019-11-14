@@ -5,7 +5,11 @@ const Net = require('./Net')
 const { getNetworkFromJSON, rebuildClientData } = require('./utils/netUtils')
 
 // const network = getNetworkFromJSON(__dirname + '/../data/client-data.json')
-// const net = new Net({ network, timeLimit: 5 })
+// console.dir(network, { depth: null })
+// const net = new Net({ network, timeLimit: 1 })
+// const state = net.launch()
+// console.log(state)
+// rebuildClientData(`${__dirname}/../data/client-data.json`, state)
 
 // for (let i = 0; i < 8; i++) {
 //     const state = net.next()

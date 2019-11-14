@@ -1,0 +1,58 @@
+{
+    "nodes": [
+        {
+            "data": {
+                "id": "pl-1",
+                "type": "place",
+                "markers": 1
+            },
+            "position": {
+                "x": 100,
+                "y": 100
+            }
+        },
+        {
+            "data": {
+                "id": "pl-2",
+                "type": "place"
+            },
+            "position": {
+                "x": 300,
+                "y": 100
+            }
+        },
+        {
+            "data": {
+                "id": "tr-1",
+                "type": "transition"
+            },
+            "position": {
+                "x": 200,
+                "y": 100
+            }
+        }
+    ],
+    "edges": [
+        {
+            "data": {
+                "id": "arc-1",
+                "source": "tr-1",
+                "target": "pl-1"
+            }
+        },
+        {
+            "data": {
+                "id": "arc-2",
+                "source": "pl-1",
+                "target": "tr-1"
+            }
+        },
+        {
+            "data": {
+                "id": "arc-3",
+                "source": "tr-1",
+                "target": "pl-2"
+            }
+        }
+    ]
+}
