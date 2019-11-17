@@ -96,7 +96,8 @@
         {
             "data": {
                 "id": "pl-10",
-                "type": "place"
+                "type": "place",
+                "markers": 1
             },
             "position": {
                 "x": 500,

@@ -89,5 +89,56 @@ module.exports = {
 
         // Rewrite client-data.json file
         fs.writeFileSync(jsonName, JSON.stringify(data))
+    },
+
+    // Find the same elements in two arrays or more
+    intersectionOfArrays: arrs => {
+        const intersection = []
+        for (let i = 0; i < arrs.length; i++) {
+            for (let j = 0; j < arrs.length; j++) {
+                if (i === j) continue
+                for (let k = 0; k < arrs[i].length; k++) {
+                    if (arrs[j].indexOf(arrs[i][k]) !== -1 && 
+                        intersection.indexOf(arrs[i][k]) === -1)
+                        intersection.push(arrs[i][k])
+                }
+            }
+        }
+
+        return intersection
+    },
+
+    /**
+     * Gets an index of the element by <probs>. If <probs> is an empty array -
+     * generate equal probabilities using the <numOfElements>.
+     */
+    getRandomWithProbability: (numOfElems, probs) => {
+        // If probs is undefined - generate equal probabilities using the number
+        // of elements
+        if (!probs)
+            probs = new Array(numOfElems).fill(1 / numOfElems)
+
+        // If probs is an empty array - push 1 into it 
+        if (!probs.length)
+            probs = [1]
+
+        // If sum of probabilities is less than 1 - add new item, so that now
+        // the sum would be 1
+        const sumOfProbs = probs.reduce((acc, x) => acc += x)
+        if (sumOfProbs < 1)
+            probs.push(1 - sumOfProbs)
+
+        const num = Math.random()
+        let s = 0
+        const lastIndex = probs.length - 1
+
+        for (let i = 0; i < lastIndex; ++i) {
+            s += probs[i]
+            if (num < s) {
+                return i
+            }
+        }
+
+        return lastIndex
     }
 }
