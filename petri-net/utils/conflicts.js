@@ -48,25 +48,23 @@ const checkForConflicts = (validTransIds, network) => {
     return transAndPlaces
 }
 
-const resolveConflicts = (conflicts, validTransIds, network) => {
-    // Pre remove all conflict transitions from validTransIds
-    for (const key in conflicts)
-        validTransIds = validTransIds.filter(x => x !== key)
+// @returns ids of transitions to launch
+const resolveConflicts = (conflicts, network) => {
 
     const resolvingMethod = getConflictsResolvingMethod(conflicts, network)
     let execTransId = ''
 
     if (resolvingMethod === 'with equal probability') {
+
         const numOfConflictTrans = Object.keys(conflicts).length
         execTransId = Object.keys(conflicts)
         [getRandomWithProbability(numOfConflictTrans)]
+
     } else if (resolvingMethod == 'by priority') {
         throw Error('Resolving conflicts by priority is not implemented yet')
     }
 
-    console.log({ execTransId })
-
-    return [...validTransIds, execTransId]
+    return [execTransId]
 }
 
 module.exports = {

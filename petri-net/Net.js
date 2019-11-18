@@ -43,6 +43,7 @@ module.exports = class Net {
                 elem => elem.arc.direction === 'in')
             const validMovesForTrans = inArcsForTrans.filter(
                 elem => elem.place.markers >= elem.arc.weight)
+
             if (validMovesForTrans.length === inArcsForTrans.length)
                 validTransIds.push(transition.trans.id)
         }
@@ -51,38 +52,50 @@ module.exports = class Net {
     }
 
     consume() {
-        let validTransIds = this.getOnlyValidMoves()
+        let validTransIds = []
+        do {
+            validTransIds = this.getOnlyValidMoves()
 
-        // Resolve conflicts if there are any
-        const conflicts = checkForConflicts(validTransIds, this.network)
-        let noConflicts = true
-        for (const tr in conflicts)
-            if (conflicts[tr].length) noConflicts = false
+            // Resolve conflicts if there are any
+            const conflicts = checkForConflicts(validTransIds, this.network)
+            let noConflicts = true
+            for (const tr in conflicts)
+                if (conflicts[tr].length) noConflicts = false
 
-        console.log(`No conflicts: ${noConflicts}`)
-        console.log(`before: ${validTransIds}`)
-        console.log(conflicts)
-        if (!noConflicts)
-            validTransIds = resolveConflicts(conflicts, validTransIds, this.network)
-        console.log(`after: ${validTransIds}`)
+            console.log(`No conflicts: ${noConflicts}`)
+            console.log(`before: ${validTransIds}`)
+            console.log(conflicts)
 
-        // Consume markers
-        for (const item of this.network) {
-            if (!validTransIds.includes(item.trans.id)) continue
+            // Pre remove all conflict transitions from validTransIds
+            for (const key in conflicts)
+                validTransIds = validTransIds.filter(x => x !== key)
 
-            let isConsumed = false
-            for (const elem of item.elems) {
-                if (elem.arc.direction === 'in' &&
-                        elem.place.markers >= elem.arc.weight) {
-                    elem.place.markers -= elem.arc.weight
-                    console.log(`Id: ${elem.place.id} Markers: ${elem.place.markers}`)
-                    this.netState[elem.place.id] = elem.place.markers
-                    isConsumed = true
-                }
+            if (!noConflicts) {
+                const resolved = resolveConflicts(conflicts, this.network)
+                validTransIds = [...validTransIds, ...resolved]
             }
 
-            if (isConsumed) this.consumerIds.push(item.trans.id)
-        }
+            console.log(`after: ${validTransIds}`)
+
+            // Consume markers
+            for (const item of this.network) {
+                if (!validTransIds.includes(item.trans.id)) continue
+
+                let isConsumed = false
+                for (const elem of item.elems) {
+                    if (elem.arc.direction === 'in' &&
+                            elem.place.markers >= elem.arc.weight) {
+                        elem.place.markers -= elem.arc.weight
+                        this.netState[elem.place.id] = elem.place.markers
+                        isConsumed = true
+                    }
+                }
+
+                if (isConsumed) this.consumerIds.push(item.trans.id)
+            }
+            
+            validTransIds = this.getOnlyValidMoves()
+        } while (validTransIds.length)
     }
 
     produce() {
