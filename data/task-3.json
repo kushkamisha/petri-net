@@ -275,42 +275,48 @@
             "data": {
                 "id": "arc-16",
                 "source": "pl-10",
-                "target": "tr-2"
+                "target": "tr-2",
+                "label": "6"
             }
         },
         {
             "data": {
                 "id": "arc-17",
                 "source": "tr-2",
-                "target": "pl-10"
+                "target": "pl-10",
+                "label": "6"
             }
         },
         {
             "data": {
                 "id": "arc-18",
                 "source": "pl-10",
-                "target": "tr-4"
+                "target": "tr-4",
+                "label": "2"
             }
         },
         {
             "data": {
                 "id": "arc-19",
                 "source": "tr-4",
-                "target": "pl-10"
+                "target": "pl-10",
+                "label": "2"
             }
         },
         {
             "data": {
                 "id": "arc-20",
                 "source": "pl-10",
-                "target": "tr-6"
+                "target": "tr-6",
+                "label": "3"
             }
         },
         {
             "data": {
                 "id": "arc-21",
                 "source": "tr-6",
-                "target": "pl-10"
+                "target": "pl-10",
+                "label": "3"
             }
         }
     ]

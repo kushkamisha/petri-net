@@ -35,6 +35,21 @@ function draw(elements) {
                     'curve-style': 'bezier',
                 }
             },
+            {
+                selector: "edge[label]",
+                css: {
+                    "label": "data(label)",
+
+                    // label background
+                    "text-background-opacity": 1,
+                    "color": "#fff",
+                    "text-background-color": "black",
+                    "text-background-shape": "roundrectangle",
+                    "text-border-color": "black",
+                    "text-border-width": 2,
+                    "text-border-opacity": 1
+                }
+            }
         ],
 
         elements
