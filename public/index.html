@@ -17,12 +17,24 @@
     <div id="cy"></div>
 
     <div id="manageButtons">
-        <button onclick="socket.send('launch')">Execute</button>
-        <button onclick="socket.send('next')">Debug -> Next</button>
-        <input type="text" placeholder="iterations" maxlength="3" size="10" />
+        <button onclick="socket.send(JSON.stringify({ type: 'launch' }))">Execute</button>
+        <button onclick="socket.send(JSON.stringify({ type: 'next' }))">Debug -> Next</button>
+        <input type="text" id="iterations" placeholder="iterations" maxlength="3" size="10" />
     </div>
 
     <script src="scripts/websocket.js"></script>
     <script src="scripts/draw.js"></script>
+
+    <script>
+        const iterations = document.getElementById('iterations')
+
+        iterations.addEventListener('change', event => {
+            const result = document.getElementById('iterations').value
+            socket.send(JSON.stringify({
+                type: 'iterations',
+                data: parseInt(result)
+            }))
+        })
+    </script>
 </body>
 </html>
