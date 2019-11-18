@@ -140,5 +140,18 @@ module.exports = {
         }
 
         return lastIndex
+    },
+
+    getObjectFromNetById: (id, network) => {
+        for (const transition of network) {
+            if (transition.trans.id === id) return transition.trans
+
+            for (const elem of transition.elems) {
+                if (elem.place.id === id) return elem.place
+                if (elem.arc.id === id) return elem.arc
+            }
+        }
+
+        return false
     }
 }
