@@ -36,9 +36,9 @@ function draw(elements) {
                 }
             },
             {
-                selector: "edge[label]",
+                selector: "edge[weight]",
                 css: {
-                    "label": "data(label)",
+                    "label": "data(weight)",
 
                     // label background
                     "text-background-opacity": 1,

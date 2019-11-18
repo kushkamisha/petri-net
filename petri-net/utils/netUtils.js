@@ -43,7 +43,7 @@ module.exports = {
                     arc: new Arc({
                         id: arc.data.id,
                         direction: 'in',
-                        weight: arc.data.weight ? arc.data.weight : 1
+                        weight: arc.data.weight ? parseInt(arc.data.weight) : 1
                     })
                 })
             }
@@ -65,7 +65,7 @@ module.exports = {
                     arc: new Arc({
                         id: arc.data.id,
                         direction: 'out',
-                        weight: arc.data.weight ? arc.data.weight : 1
+                        weight: arc.data.weight ? parseInt(arc.data.weight) : 1
                     })
                 })
             }
