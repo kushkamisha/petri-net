@@ -1,3 +1,5 @@
+'use strict'
+
 function draw(elements) {
     window.cy = cytoscape({
         container: document.getElementById('cy'),

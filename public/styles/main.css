@@ -1,0 +1,14 @@
+html, body {
+    font-family: helvetica, sans-serif;
+    font-size: 14px;
+    height: 100%;
+    margin: 0;
+}
+
+#cy {
+    background-color: antiquewhite;
+    width: 100%;
+    height: calc(100% - 70px);
+    z-index: 1;
+    overflow: hidden;
+}
