@@ -24,6 +24,16 @@
         {
             "data": {
                 "id": "pl-3",
+                "type": "place"
+            },
+            "position": {
+                "x": 500,
+                "y": 100
+            }
+        },
+        {
+            "data": {
+                "id": "pl-4",
                 "type": "place",
                 "markers": 10
             },
@@ -39,6 +49,16 @@
             },
             "position": {
                 "x": 200,
+                "y": 100
+            }
+        },
+        {
+            "data": {
+                "id": "tr-2",
+                "type": "transition"
+            },
+            "position": {
+                "x": 400,
                 "y": 100
             }
         }
@@ -68,15 +88,29 @@
         {
             "data": {
                 "id": "arc-4",
-                "source": "pl-3",
-                "target": "tr-1"
+                "source": "pl-2",
+                "target": "tr-2"
             }
         },
         {
             "data": {
                 "id": "arc-5",
-                "source": "tr-1",
+                "source": "tr-2",
                 "target": "pl-3"
+            }
+        },
+        {
+            "data": {
+                "id": "arc-6",
+                "source": "pl-4",
+                "target": "tr-1"
+            }
+        },
+        {
+            "data": {
+                "id": "arc-7",
+                "source": "tr-2",
+                "target": "pl-4"
             }
         }
     ]

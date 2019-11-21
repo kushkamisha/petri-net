@@ -44,7 +44,8 @@ module.exports = class Net {
             const validMovesForTrans = inArcsForTrans.filter(
                 elem => elem.place.markers >= elem.arc.weight)
 
-            if (validMovesForTrans.length === inArcsForTrans.length)
+            if ((validMovesForTrans.length === inArcsForTrans.length) &&
+                !this.consumerIds.includes(transition.trans.id))
                 validTransIds.push(transition.trans.id)
         }
         
@@ -100,8 +101,10 @@ module.exports = class Net {
 
     produce() {
         for (const item of this.network) {
+            // This transition was executed
             if (!this.consumerIds.includes(item.trans.id)) continue
 
+            // Remove duplicating consumer ids
             this.consumerIds = this.consumerIds.filter(x => x !== item.trans.id)
 
             for (const elem of item.elems) {
