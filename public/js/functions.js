@@ -20,7 +20,7 @@ function loadFromFile() {
             draw(JSON.parse(e.target.result))
             socket.send(JSON.stringify({
                 type: 'recreate',
-                data: { filename: file.name, data: e.target.result }
+                data: e.target.result
             }))
         }
     }
