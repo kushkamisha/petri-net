@@ -29,14 +29,13 @@
                             <a href="#">Net</a>
                             <ul class="nav-dropdown">
                                 <li>
-                                    <a href="#" onclick="socket.send(JSON.stringify({ type: 'launch' }))">Execute</a>
+                                    <a href="#" onclick="netExecute()">Execute</a>
                                 </li>
                                 <li>
                                     <a href="#" onclick="saveNet()">Save As</a>
                                 </li>
                                 <li>
                                     <a href="#" onclick="loadFromFile()">
-                                        <!-- <input id="chooseFile" type="file" style="display: none;" /> -->
                                         Load From File
                                     </a>
                                 </li>
@@ -51,7 +50,7 @@
                             </ul>
                         </li> -->
                         <li>
-                            <a href="#!" onclick="socket.send(JSON.stringify({ type: 'next' }))">Debug -> Next</a>
+                            <a href="#!" onclick="netNext()">Debug -> Next</a>
                         </li>
                         <!-- <li>
                             <input type="text" id="iterations" placeholder="iterations" maxlength="3" size="10" />
