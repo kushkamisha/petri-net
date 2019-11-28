@@ -1,15 +1,17 @@
 'use strict'
 
-const { checkForConflicts, resolveConflicts } = require('./utils/conflicts')
-const { getRandomWithProbability } = require('./utils/net-utils')
+// const { checkForConflicts, resolveConflicts } = require('./utils/conflicts')
+const { getRandomWithProbability, minTransId } = require('./utils/net-utils')
 
 module.exports = class Net {
     constructor({ network, timeLimit }) {
         this.network = network
         this.timeLimit = timeLimit ? timeLimit : 1
-
+        
+        this.time = 0 // time of the network
         this.netState = {} // object(place id <-> number of markers)
         this.consumerIds = [] // Ids of trans that consumed markers on the step
+        this.exitTimes = [] // { transId, exitTime } - exit time of markers from transition
         this.areMarkersConsumed = false
 
         this.getNetState()
@@ -33,7 +35,7 @@ module.exports = class Net {
         if (this.timeLimit > 0)
             this.makeMove()
 
-        return this.netState
+        return [this.netState, this.time]
     }
 
     // @return ids of transitions that can be executed now
@@ -45,8 +47,7 @@ module.exports = class Net {
             const validMovesForTrans = inArcsForTrans.filter(
                 elem => elem.place.markers >= elem.arc.weight)
 
-            if ((validMovesForTrans.length === inArcsForTrans.length) &&
-                !this.consumerIds.includes(transition.trans.id))
+            if ((validMovesForTrans.length === inArcsForTrans.length))
                 validTransIds.push(transition.trans.id)
         }
         
@@ -56,31 +57,9 @@ module.exports = class Net {
     consume() {
         let validTransIds = this.getOnlyValidMoves()
 
-        // // Resolve conflicts if there are any
-        // const conflicts = checkForConflicts(validTransIds, this.network)
-        // let noConflicts = true
-        // for (const tr in conflicts)
-        //     if (conflicts[tr].length) noConflicts = false
-
-        // console.log(`No conflicts: ${noConflicts}`)
-        // console.log(`before: ${validTransIds}`)
-        // console.log(conflicts)
-
-        // // Pre remove all conflict transitions from validTransIds
-        // for (const key in conflicts)
-        //     validTransIds = validTransIds.filter(x => x !== key)
-
-        // if (!noConflicts) {
-        //     const resolved = resolveConflicts(conflicts, this.network)
-        //     validTransIds = [...validTransIds, ...resolved]
-        // }
-
-        // console.log(`after: ${validTransIds}`)
-
         // Choose randomly which transition from available should be executed
         const id = getRandomWithProbability(validTransIds.length)
         const transId2Execute = validTransIds[id]
-        console.log({ validTransIds })
         console.log({ transId2Execute })
 
         // Consume markers
@@ -96,17 +75,27 @@ module.exports = class Net {
                 }
             }
 
-            if (isConsumed) this.consumerIds.push(item.trans.id)
+            if (isConsumed) {
+                this.consumerIds.push(item.trans.id)
+                this.exitTimes.push({
+                    transId: item.trans.id,
+                    exitTime: this.time + item.trans.delay
+                })
+            }
         }
+        console.log(this.exitTimes)
     }
 
     produce() {
+        console.log(this.exitTimes)
+        const [ transId, currTime] = minTransId(this.exitTimes)
+        this.time = currTime
+
         for (const item of this.network) {
-            // This transition was executed
-            if (!this.consumerIds.includes(item.trans.id)) continue
+            if (item.trans.id !== transId) continue
 
             // Remove duplicating consumer ids
-            this.consumerIds = this.consumerIds.filter(x => x !== item.trans.id)
+            // this.consumerIds = this.consumerIds.filter(x => x !== item.trans.id)
 
             for (const elem of item.elems) {
                 if (elem.arc.direction === 'out') {
@@ -115,12 +104,18 @@ module.exports = class Net {
                 }
             }
         }
+
+        // Remove an executed transition from exitTimes list
+        this.exitTimes = this.exitTimes.filter(elem => elem.transId !== transId)
     }
 
     makeMove() {
-        this.areMarkersConsumed ?
-            ( this.produce(), this.timeLimit-- ) :
+        if (this.areMarkersConsumed) {
+            this.produce()
+            this.timeLimit--
+        } else {
             this.consume()
+        }
 
         this.areMarkersConsumed = !this.areMarkersConsumed
     }

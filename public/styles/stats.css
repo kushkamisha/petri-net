@@ -1,0 +1,16 @@
+ .card {
+    padding: 1em 1.5em;
+    font-family:'Roboto',sans-serif;
+    background-color: #2e2e3a;
+    height: 100%;
+}
+.card h3 {
+    font-size: 1.2em;
+    text-transform: uppercase;
+    color: #ffffff;
+}
+.card p {
+    margin: 0px;
+    margin-left: 0;
+    color: #ffffff;
+}

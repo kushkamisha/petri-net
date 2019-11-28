@@ -17,11 +17,14 @@ module.exports = {
         for (const node of data.nodes) {
             if (node.data.type === 'transition') {
                 transIds.push(node.data.id)
-                net.push({ trans: new Transition({ id: node.data.id }), elems: [] })
+                net.push({
+                    trans: new Transition({ id: node.data.id, delay: parseFloat(node.data.delay) }),
+                    elems: []
+                })
             } else if (node.data.type === 'place')
                 places.push(new Place({
                     id: node.data.id,
-                    markers: node.data.markers ? node.data.markers : 0
+                    markers: node.data.markers
                 }))
         }
 
@@ -153,5 +156,18 @@ module.exports = {
         }
 
         return false
+    },
+
+    minTransId: exitTimes => {
+        let minVal = Infinity
+        let minId = ''
+        for (const elem of exitTimes) {
+            if (elem.exitTime < minVal) {
+                minVal = elem.exitTime
+                minId = elem.transId
+            }
+        }
+
+        return [minId, minVal]
     }
 }

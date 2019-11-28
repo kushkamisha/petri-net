@@ -3,6 +3,6 @@
 module.exports = class Place {
     constructor({ id, markers }) {
         this.id = id
-        this.markers = markers
+        this.markers = markers ? markers : 0
     }
 }

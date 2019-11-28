@@ -5,10 +5,29 @@ html, body {
     margin: 0;
 }
 
+.columnsContainer {
+    position: relative;
+    height: calc(100% - 70px);
+}
+.rightColumn {
+    height: 100%;
+}
+
+@media screen and (min-width: 799px) {
+    .rightColumn {
+        margin-left: 15em;
+    }
+    .leftColumn {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 15em;
+        height: 100%;
+    }
+}
+
 #cy {
     background-color: antiquewhite;
-    width: 100%;
-    height: calc(100% - 70px);
-    z-index: 1;
-    overflow: hidden;
+    margin-top: 0;
+    height: 100%;
 }

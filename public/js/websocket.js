@@ -9,6 +9,4 @@ socket.onclose = () => {
     console.log('closed')
 }
 
-socket.onmessage = event => {
-    processEvent()
-}
+socket.onmessage = event => processEvent(event)

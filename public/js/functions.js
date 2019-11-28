@@ -49,10 +49,21 @@ function loadFromFile() {
     input.click()
 }
 
-function processEvent() {
-    const data = JSON.parse(event.data)
-    console.log(data)
-    draw(data)
+function processEvent({ data }) {
+    const msg = JSON.parse(data)
+    let net = {}
+    
+    switch(msg.type) {
+        case 'net-data':
+            net = JSON.parse(msg.data)
+            draw(net)
+            break
+        case 'net-next':
+            net = msg.data
+            draw(net)
+            console.log(msg.time)
+            break
+    }
 }
 
 /**
