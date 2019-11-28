@@ -23,6 +23,7 @@ function draw(elements) {
             {
                 selector: 'node[type="transition"]',
                 css: {
+                    'content': ele => `t=${ele.data('delay')}`,
                     'shape': 'rectangle',
                     'height': '40',
                     'width': '10',
