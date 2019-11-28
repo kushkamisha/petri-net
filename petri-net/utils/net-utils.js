@@ -6,8 +6,8 @@ const Arc = require('../Arc')
 const Transition = require('../Transition')
 
 module.exports = {
-    getNetworkFromJSON: jsonName => {
-        const rawdata = fs.readFileSync(jsonName)
+    getNetworkFromJSON: filePath => {
+        const rawdata = fs.readFileSync(filePath)
         const data = JSON.parse(rawdata)
 
         const net = []
@@ -48,7 +48,7 @@ module.exports = {
                 })
             }
 
-            // Arrow from the transition
+            // Arc is out of the Transition
             else {
                 const currTransArr = net.filter(x => x.trans.id === arc.data.source)
 
@@ -74,8 +74,8 @@ module.exports = {
         return net
     },
 
-    rebuildClientData: (jsonName, netState) => {
-        const rawdata = fs.readFileSync(jsonName)
+    updClientNet: (clientPath, netState) => {
+        const rawdata = fs.readFileSync(clientPath)
         const data = JSON.parse(rawdata)
 
         for (const node of data.nodes) {
@@ -87,8 +87,8 @@ module.exports = {
             }
         }
 
-        // Rewrite client-data.json file
-        fs.writeFileSync(jsonName, JSON.stringify(data))
+        // Rewrite the file
+        fs.writeFileSync(clientPath, JSON.stringify(data))
     },
 
     // Find the same elements in two arrays or more

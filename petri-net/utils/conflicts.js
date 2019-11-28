@@ -4,7 +4,7 @@ const {
     intersectionOfArrays,
     getRandomWithProbability,
     getObjectFromNetById
-} = require('./netUtils')
+} = require('./net-utils')
 
 const getConflictsResolvingMethod = (confs, network) => {
     let resolvingWithEqlProb = true

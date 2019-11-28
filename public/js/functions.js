@@ -1,5 +1,10 @@
 'use strict'
 
+function askNetData() {
+    const timestamp = getCookie('timestamp')
+    socket.send(JSON.stringify({ type: 'net-data', ...timestamp && { timestamp } }))
+}
+
 function netExecute() {
     const timestamp = getCookie('timestamp')
     socket.send(JSON.stringify({ type: 'launch', ...timestamp && {timestamp} }))
@@ -42,6 +47,12 @@ function loadFromFile() {
     }
 
     input.click()
+}
+
+function processEvent() {
+    const data = JSON.parse(event.data)
+    console.log(data)
+    draw(data)
 }
 
 /**

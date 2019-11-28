@@ -1,6 +1,7 @@
 'use strict'
 
 const { checkForConflicts, resolveConflicts } = require('./utils/conflicts')
+const { getRandomWithProbability } = require('./utils/net-utils')
 
 module.exports = class Net {
     constructor({ network, timeLimit }) {
@@ -53,50 +54,50 @@ module.exports = class Net {
     }
 
     consume() {
-        let validTransIds = []
-        do {
-            validTransIds = this.getOnlyValidMoves()
+        let validTransIds = this.getOnlyValidMoves()
 
-            // Resolve conflicts if there are any
-            const conflicts = checkForConflicts(validTransIds, this.network)
-            let noConflicts = true
-            for (const tr in conflicts)
-                if (conflicts[tr].length) noConflicts = false
+        // // Resolve conflicts if there are any
+        // const conflicts = checkForConflicts(validTransIds, this.network)
+        // let noConflicts = true
+        // for (const tr in conflicts)
+        //     if (conflicts[tr].length) noConflicts = false
 
-            console.log(`No conflicts: ${noConflicts}`)
-            console.log(`before: ${validTransIds}`)
-            console.log(conflicts)
+        // console.log(`No conflicts: ${noConflicts}`)
+        // console.log(`before: ${validTransIds}`)
+        // console.log(conflicts)
 
-            // Pre remove all conflict transitions from validTransIds
-            for (const key in conflicts)
-                validTransIds = validTransIds.filter(x => x !== key)
+        // // Pre remove all conflict transitions from validTransIds
+        // for (const key in conflicts)
+        //     validTransIds = validTransIds.filter(x => x !== key)
 
-            if (!noConflicts) {
-                const resolved = resolveConflicts(conflicts, this.network)
-                validTransIds = [...validTransIds, ...resolved]
-            }
+        // if (!noConflicts) {
+        //     const resolved = resolveConflicts(conflicts, this.network)
+        //     validTransIds = [...validTransIds, ...resolved]
+        // }
 
-            console.log(`after: ${validTransIds}`)
+        // console.log(`after: ${validTransIds}`)
 
-            // Consume markers
-            for (const item of this.network) {
-                if (!validTransIds.includes(item.trans.id)) continue
+        // Choose randomly which transition from available should be executed
+        const id = getRandomWithProbability(validTransIds.length)
+        const transId2Execute = validTransIds[id]
+        console.log({ validTransIds })
+        console.log({ transId2Execute })
 
-                let isConsumed = false
-                for (const elem of item.elems) {
-                    if (elem.arc.direction === 'in' &&
-                            elem.place.markers >= elem.arc.weight) {
-                        elem.place.markers -= elem.arc.weight
-                        this.netState[elem.place.id] = elem.place.markers
-                        isConsumed = true
-                    }
+        // Consume markers
+        for (const item of this.network) {
+            if (item.trans.id !== transId2Execute) continue
+
+            let isConsumed = false
+            for (const elem of item.elems) {
+                if (elem.arc.direction === 'in') {
+                    elem.place.markers -= elem.arc.weight
+                    this.netState[elem.place.id] = elem.place.markers
+                    isConsumed = true
                 }
-
-                if (isConsumed) this.consumerIds.push(item.trans.id)
             }
-            
-            validTransIds = this.getOnlyValidMoves()
-        } while (validTransIds.length)
+
+            if (isConsumed) this.consumerIds.push(item.trans.id)
+        }
     }
 
     produce() {
