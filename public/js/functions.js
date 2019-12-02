@@ -49,6 +49,7 @@ function loadFromFile() {
 
 function processEvent({ data }) {
     const msg = JSON.parse(data)
+    const time = document.getElementById('time')
     let net = {}
     
     switch(msg.type) {
@@ -59,7 +60,7 @@ function processEvent({ data }) {
         case 'net-next':
             net = msg.data
             draw(net)
-            console.log(msg.time)
+            time.innerText = msg.time
             break
     }
 }
