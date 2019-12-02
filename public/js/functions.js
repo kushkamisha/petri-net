@@ -23,10 +23,8 @@ function saveNet() {
 }
 
 function loadFromFile() {
-    const input = document.createElement('input')
-    input.type = 'file'
-
-    input.onchange = e => {
+    const input = document.getElementById('upload-net')
+    input.addEventListener('change', e => {
         const file = e.target.files[0]
         const reader = new FileReader()
         reader.readAsText(file, 'utf-8')
@@ -44,7 +42,7 @@ function loadFromFile() {
             }))
             setCookie('timestamp', timestamp, 7)
         }
-    }
+    })
 
     input.click()
 }
