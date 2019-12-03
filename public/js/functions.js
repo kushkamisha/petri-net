@@ -63,6 +63,9 @@ function processEvent({ data }) {
             time.innerText = msg.time
             break
     }
+
+    window.cy.on('tap', 'node', cyHandler)
+    window.cy.on('tap', 'edge', cyHandler)
 }
 
 /**
@@ -91,4 +94,45 @@ function getCookie(name) {
         if (c.indexOf(name) === 0) return c.substring(name.length)
     }
     return ''
+}
+
+function cyHandler(event) {
+    const id = event.target.id()
+    const type = event.target.data('type')
+
+    switch(type) {
+        case 'place':
+            break
+        case 'transition':
+            transitionHandler(id)
+            break
+        default:
+            // arc
+            break
+    }
+}
+
+function transitionHandler(id) {
+    let delay = prompt('Enter a time delay for the transition', 1)
+    while (isNaN(parseInt(delay)))
+        delay = prompt(
+            'The delay must be an integer above zero. Please, try again',
+            1)
+    delay = parseInt(delay)
+
+    const net = window.cy.json().elements
+    const transition = net.nodes.filter(x => x.data.id === id)[0]
+    transition.data.delay = delay
+
+    // update an image of the net
+    draw(net)
+
+    // update the file on server
+    const timestamp = getCookie('timestamp')
+    const data = JSON.stringify(net)
+    socket.send(JSON.stringify({
+        type: 'recreate',
+        timestamp,
+        data
+    }))
 }
