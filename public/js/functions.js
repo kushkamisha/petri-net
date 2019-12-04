@@ -58,14 +58,25 @@ function processEvent({ data }) {
             draw(net)
             break
         case 'net-next':
-            net = msg.data
+            const state = msg.state
+            net = updateNet(state)
             draw(net)
             time.innerText = msg.time
             break
     }
+}
 
-    window.cy.on('tap', 'node', cyHandler)
-    window.cy.on('tap', 'edge', cyHandler)
+function updateNet(state) {
+    const net = window.cy.json().elements
+    for (const node of net.nodes) {
+        const id = node.data.id
+        // If this is a place id
+        if (state[id] !== undefined) {
+            if (state[id] === 0) delete node.data.markers
+            else node.data.markers = state[id]
+        }
+    }
+    return net
 }
 
 /**
@@ -114,6 +125,7 @@ function cyHandler(event) {
 
 function transitionHandler(id) {
     let delay = prompt('Enter a time delay for the transition', 1)
+    if (delay == null) return;
     while (isNaN(parseInt(delay)))
         delay = prompt(
             'The delay must be an integer above zero. Please, try again',

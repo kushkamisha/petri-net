@@ -58,4 +58,8 @@ function draw(elements) {
 
         elements
     })
+
+    // Add click handlers
+    window.cy.on('tap', 'node', cyHandler)
+    window.cy.on('tap', 'edge', cyHandler)
 }

@@ -25,14 +25,14 @@ module.exports = class Net {
     }
 
     launch() {
-        while(this.timeLimit > 0)
+        while(this.time < this.timeLimit)
             this.makeMove()
 
-        return this.netState
+        return [this.netState, this.time]
     }
     
     next() {
-        if (this.timeLimit > 0)
+        if (this.time < this.timeLimit)
             this.makeMove()
 
         return [this.netState, this.time]
@@ -110,13 +110,7 @@ module.exports = class Net {
     }
 
     makeMove() {
-        if (this.areMarkersConsumed) {
-            this.produce()
-            this.timeLimit--
-        } else {
-            this.consume()
-        }
-
+        this.areMarkersConsumed ? this.produce() : this.consume()
         this.areMarkersConsumed = !this.areMarkersConsumed
     }
 }
