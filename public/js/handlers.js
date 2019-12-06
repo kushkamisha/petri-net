@@ -17,7 +17,7 @@ function handleClicks() {
         window.pressedKey = undefined
         window.cy.autoungrabify(false)
         window.eh.disable()
-    })
+    }, false)
 
 }
 
@@ -56,31 +56,35 @@ function backgroundClick(e) {
 }
 
 function transitionClick(e) {
-    console.log('transition click')
-    const id = e.target.id()
-    let delay = prompt('Enter a time delay for the transition', 1)
-    if (delay == null) return;
-    while (isNaN(parseInt(delay)))
-        delay = prompt(
-            'The delay must be an integer above zero. Please, try again',
-            1)
-    delay = parseInt(delay)
+    // Only if in edit elements mode
+    if (window.pressedKey === 'r') {
+        window.pressedKey = undefined
 
-    const net = window.cy.json().elements
-    const transition = net.nodes.filter(x => x.data.id === id)[0]
-    transition.data.delay = delay
+        const id = e.target.id()
+        let delay = prompt('Enter a time delay for the transition', 1)
+        if (delay == null) return
+        while (isNaN(parseInt(delay)))
+            delay = prompt(
+                'The delay must be an integer above zero. Please, try again',
+                1)
+        delay = parseInt(delay)
 
-    // update an image of the net
-    draw(net)
+        const net = window.cy.json().elements
+        const transition = net.nodes.filter(x => x.data.id === id)[0]
+        transition.data.delay = delay
 
-    // update the file on server
-    const timestamp = getCookie('timestamp')
-    const data = JSON.stringify(net)
-    socket.send(JSON.stringify({
-        type: 'recreate',
-        timestamp,
-        data
-    }))
+        // update an image of the net
+        draw(net)
+
+        // update the file on server
+        const timestamp = getCookie('timestamp')
+        const data = JSON.stringify(net)
+        socket.send(JSON.stringify({
+            type: 'recreate',
+            timestamp,
+            data
+        }))
+    }
 }
 
 function placeClick(e) {

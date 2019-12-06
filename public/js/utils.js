@@ -1,6 +1,5 @@
 'use strict'
 
-
 function isArc(trg) { return trg.isEdge() }
 
 function isPlace(trg) { return trg.data('type') === 'place' }
@@ -30,7 +29,14 @@ function keyHandler(e) {
         e: 101,
         eUA: 1091,
         eCAPS: 69,
-        eUACAPS: 1059
+        eUACAPS: 1059,
+
+        r: 114,
+        rUA: 1082,
+        rCAPS: 82,
+        rUACAPS: 1050,
+
+        backspace: 8
     }
 
     switch (keyCode) {
@@ -53,6 +59,17 @@ function keyHandler(e) {
             window.pressedKey = 'e'
             window.eh.enable()
             window.eh.enableDrawMode()
+            break
+        case key.r:
+        case key.rUA:
+        case key.rCAPS:
+        case key.rUACAPS:
+            window.pressedKey = 'r'
+            break
+        case key.backspace:
+            window.pressedKey = 'backspace'
+            const elems = cy.$(':selected')
+            elems.forEach(elem => cy.remove(elem))
             break
     }
 }

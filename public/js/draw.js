@@ -11,7 +11,7 @@ function draw(elements) {
         
         style: [
             {
-                selector: 'node[type="place"]',
+                selector: `node[type='place']`,
                 css: {
                     'content': 'data(markers)',
                     'text-valign': 'center',
@@ -21,7 +21,7 @@ function draw(elements) {
                 }
             },
             {
-                selector: 'node[type="transition"]',
+                selector: `node[type='transition']`,
                 css: {
                     'content': el => el.data('delay') ?
                         `t=${el.data('delay')}` : '',
@@ -40,18 +40,24 @@ function draw(elements) {
                 }
             },
             {
-                selector: "edge[weight]",
+                selector: 'edge[weight]',
                 css: {
-                    "label": "data(weight)",
+                    'label': 'data(weight)',
 
                     // label background
-                    "text-background-opacity": 1,
-                    "color": "#fff",
-                    "text-background-color": "black",
-                    "text-background-shape": "roundrectangle",
-                    "text-border-color": "black",
-                    "text-border-width": 2,
-                    "text-border-opacity": 1
+                    'text-background-opacity': 1,
+                    'color': '#fff',
+                    'text-background-color': 'black',
+                    'text-background-shape': 'roundrectangle',
+                    'text-border-color': 'black',
+                    'text-border-width': 2,
+                    'text-border-opacity': 1
+                }
+            },
+            {
+                selector: 'edge:selected',
+                style: {
+                    'line-color': 'blue'
                 }
             },
 
