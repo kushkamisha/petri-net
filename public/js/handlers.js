@@ -1,14 +1,9 @@
 'use strict'
 
-function isArc(trg) { return trg.isEdge() }
-
-function isPlace(trg) { return trg.data('type') === 'place' }
-
-function isTransition(trg) { return trg.data('type') === 'transition' }
-
-function isBackground(trg) { return trg === window.cy }
 
 function handleClicks() {
+    arcDrawingHandler()
+
     window.cy.on('tap', e => {
         const trg = e.target
         if (isBackground(trg)) return backgroundClick(e)
@@ -18,9 +13,12 @@ function handleClicks() {
     })
 
     window.addEventListener('keypress', keyHandler, false)
-    window.addEventListener('keyup', () => window.pressedKey = undefined)
+    window.addEventListener('keyup', () => {
+        window.pressedKey = undefined
+        window.cy.autoungrabify(false)
+        window.eh.disable()
+    })
 
-    arcDrawingHandler()
 }
 
 function backgroundClick(e) {
@@ -59,7 +57,7 @@ function backgroundClick(e) {
 
 function transitionClick(e) {
     console.log('transition click')
-    const id = e.transition.id()
+    const id = e.target.id()
     let delay = prompt('Enter a time delay for the transition', 1)
     if (delay == null) return;
     while (isNaN(parseInt(delay)))
@@ -85,51 +83,11 @@ function transitionClick(e) {
     }))
 }
 
-function placeClick(e) { console.log('place click') }
+function placeClick(e) {
+    console.log('place click')
+}
 
 function arcClick(e) { console.log('arc click') }
-
-function keyHandler(e) {
-    console.log(e.keyCode)
-    const keyCode = e.keyCode
-    const key = {
-        q: 113,
-        qUA: 1081,
-        qCAPS: 81,
-        qUACAPS: 1049,
-
-        w: 119,
-        wUA: 1094,
-        wCAPS: 87,
-        wUACAPS: 1062,
-
-        // e: 101,
-        // eUA: 1091,
-        // eCAPS: 69,
-        // eUACAPS: 1059
-    }
-    
-    switch(keyCode) {
-        case key.q:
-        case key.qUA:
-        case key.qCAPS:
-        case key.qUACAPS:
-            window.pressedKey = 'q'
-            break
-        case key.w:
-        case key.wUA:
-        case key.wCAPS:
-        case key.wUACAPS:
-            window.pressedKey = 'w'
-            break
-        // case key.e:
-        // case key.eUA:
-        // case key.eCAPS:
-        // case key.eUACAPS:
-        //     window.pressedKey = 'e'
-        //     break 
-    }
-}
 
 function arcDrawingHandler() {
     const defaults = {
@@ -182,7 +140,7 @@ function arcDrawingHandler() {
         },
         complete: function (sourceNode, targetNode, addedEles) {
             // fired when edgehandles is done and elements are added
-            console.log('new edge was added')
+            checkCreatedArc(sourceNode, targetNode, addedEles)
         },
         stop: function (sourceNode) {
             // fired when edgehandles interaction is stopped (either complete with added edges or incomplete)
@@ -192,7 +150,6 @@ function arcDrawingHandler() {
         },
         hoverover: function (sourceNode, targetNode) {
             // fired when a target is hovered
-            checkEdgeTarget(sourceNode, targetNode)
         },
         hoverout: function (sourceNode, targetNode) {
             // fired when a target isn't hovered anymore
@@ -210,15 +167,12 @@ function arcDrawingHandler() {
             // fired when draw mode disabled
         }
     }
+
     window.eh = window.cy.edgehandles(defaults)
-    window.eh.enableDrawMode()
+    window.eh.disable()
 }
 
-function checkEdgeTarget(src, trg) {
-    // Check is arc is valid
-    // console.log(trg)
-    if (isTransition(src) && isPlace(trg) || isPlace(src) && isTransition(trg))
-        console.log('the arc is valid')
-    else
-        console.log('the arc is invalid')
+function checkCreatedArc(src, trg, added) {
+    if (!isArcValid(src, trg))
+        window.cy.remove(added)
 }
