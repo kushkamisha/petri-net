@@ -15,7 +15,7 @@ function netNext() {
     socket.send(JSON.stringify({ type: 'next', ...timestamp && { timestamp } }))
 }
 
-function saveNet() {
+function saveNetLocally() {
     const net = window.cy.json().elements
     const filename = 'PetriNet'
     var blob = new Blob([JSON.stringify(net)], { type: 'text/json;charset=utf-8' })
@@ -64,6 +64,18 @@ function processEvent({ data }) {
             time.innerText = msg.time
             break
     }
+}
+
+function updateNetOnServer() {
+    const timestamp = getCookie('timestamp')
+    const net = window.cy.json().elements
+    const data = JSON.stringify(net)
+
+    socket.send(JSON.stringify({
+        type: 'recreate',
+        timestamp,
+        data
+    }))
 }
 
 function updateNet(state) {

@@ -37,7 +37,10 @@
                                     <a href="#" onclick="netExecute()">Execute</a>
                                 </li>
                                 <li>
-                                    <a href="#" onclick="saveNet()">Save As</a>
+                                    <a href="#" onclick="saveNetLocally()">Save On Computer</a>
+                                </li>
+                                <li>
+                                    <a href="#" onclick="updateNetOnServer()">Save In Web</a>
                                 </li>
                                 <li>
                                     <a href="#" onclick="loadFromFile()">
@@ -47,14 +50,6 @@
                                 </li>
                             </ul>
                         </li>
-                        <!-- <li>
-                            <a href="#!">Debug</a>
-                            <ul class="nav-dropdown">
-                                <li>
-                                    <a href="#!" onclick="socket.send(JSON.stringify({ type: 'next' }))">Next</a>
-                                </li>
-                            </ul>
-                        </li> -->
                         <li>
                             <a href="#!" onclick="netNext()">Make a Move</a>
                         </li>

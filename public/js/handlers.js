@@ -1,5 +1,10 @@
 'use strict'
 
+window.onbeforeunload = function (e) {
+    const dialogText = 'All unsaved net changes will be lost after refresh'
+    e.returnValue = dialogText
+    return dialogText
+}
 
 function handleClicks() {
     arcDrawingHandler()
@@ -75,15 +80,6 @@ function transitionClick(e) {
 
     // update an image of the net
     draw(net)
-
-    // update the file on server
-    // const timestamp = getCookie('timestamp')
-    // const data = JSON.stringify(net)
-    // socket.send(JSON.stringify({
-    //     type: 'recreate',
-    //     timestamp,
-    //     data
-    // }))
 }
 
 function placeClick(e) {

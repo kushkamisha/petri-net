@@ -59,7 +59,7 @@ function draw(elements) {
             {
                 selector: 'edge:selected',
                 style: {
-                    'line-color': 'blue'
+                    'line-color': '#0169d9'
                 }
             },
 
