@@ -13,7 +13,8 @@ function draw(elements) {
             {
                 selector: `node[type='place']`,
                 css: {
-                    'content': 'data(markers)',
+                    'content': el => el.data('markers') > 0 ?
+                        el.data('markers') : '',
                     'text-valign': 'center',
                     'text-halign': 'center',
                     'height': '40',
@@ -42,7 +43,8 @@ function draw(elements) {
             {
                 selector: 'edge[weight]',
                 css: {
-                    'label': 'data(weight)',
+                    'label': el => el.data('weight') > 1 ?
+                        el.data('weight') : '',
 
                     // label background
                     'text-background-opacity': 1,

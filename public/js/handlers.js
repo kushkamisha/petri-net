@@ -57,41 +57,81 @@ function backgroundClick(e) {
 
 function transitionClick(e) {
     // Only if in edit elements mode
-    if (window.pressedKey === 'r') {
-        window.pressedKey = undefined
+    if (window.pressedKey !== 'r') return
+    window.pressedKey = undefined
 
-        const id = e.target.id()
-        let delay = prompt('Enter a time delay for the transition', 1)
-        if (delay == null) return
-        while (isNaN(parseInt(delay)))
-            delay = prompt(
-                'The delay must be an integer above zero. Please, try again',
-                1)
-        delay = parseInt(delay)
+    let delay = prompt('Enter the time delay for the transition', 1)
+    if (delay == null) return;
+    while (parseInt(delay) <= 0)
+        delay = prompt(
+            'The delay must be an integer above zero. Please, try again',
+            1)
+    delay = parseInt(delay)
 
-        const net = window.cy.json().elements
-        const transition = net.nodes.filter(x => x.data.id === id)[0]
-        transition.data.delay = delay
+    const id = e.target.id()
+    const net = window.cy.json().elements
+    const transition = net.nodes.filter(x => x.data.id === id)[0]
+    transition.data.delay = delay
 
-        // update an image of the net
-        draw(net)
+    // update an image of the net
+    draw(net)
 
-        // update the file on server
-        const timestamp = getCookie('timestamp')
-        const data = JSON.stringify(net)
-        socket.send(JSON.stringify({
-            type: 'recreate',
-            timestamp,
-            data
-        }))
-    }
+    // update the file on server
+    // const timestamp = getCookie('timestamp')
+    // const data = JSON.stringify(net)
+    // socket.send(JSON.stringify({
+    //     type: 'recreate',
+    //     timestamp,
+    //     data
+    // }))
 }
 
 function placeClick(e) {
-    console.log('place click')
+    // Only if in edit elements mode
+    if (window.pressedKey !== 'r') return
+    window.pressedKey = undefined
+
+    let markers = prompt('Enter the number of markers', 1)
+    if (markers == null) return;
+
+    while (parseInt(markers) < 0)
+        markers = prompt(
+            'The number must be a non-negative integer. Please, try again',
+            1)
+    markers = parseInt(markers)
+
+    const id = e.target.id()
+    const net = window.cy.json().elements
+    const place = net.nodes.filter(x => x.data.id === id)[0]
+    place.data.markers = markers
+
+    // update an image of the net
+    draw(net)
 }
 
-function arcClick(e) { console.log('arc click') }
+function arcClick(e) {
+    // Only if in edit elements mode
+    if (window.pressedKey !== 'r') return
+    window.pressedKey = undefined
+
+    let weight = prompt('Enter the weight of the arc', 1)
+    if (weight == null) return;
+    while (parseInt(weight) <= 0)
+        weight = prompt(
+            'The weight must be an integer above zero. Please, try again',
+            1)
+    weight = parseInt(weight)
+
+    const id = e.target.id()
+    const net = window.cy.json().elements
+    const arc = net.edges.filter(x => x.data.id === id)[0]
+    // const arc = window.cy.$id(id).json()
+    arc.data.weight = weight
+    // console.log(arc.data)
+
+    // update an image of the net
+    draw(net)
+}
 
 function arcDrawingHandler() {
     const defaults = {
