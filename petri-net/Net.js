@@ -4,17 +4,17 @@ const { checkForConflicts, resolveConflicts } = require('./utils/conflicts')
 const { getRandomWithProbability, minTransIds } = require('./utils/net-utils')
 
 module.exports = class Net {
-    constructor({ network, timeLimit }) {
+    constructor({ network, timeLimit, time, netState, consumerIds, exitTimes, areMarkersConsumed }) {
         this.network = network ? network : []
         this.timeLimit = timeLimit ? timeLimit : 1
         
-        this.time = 0 // time of the network
-        this.netState = {} // object(place id <-> number of markers)
-        this.consumerIds = [] // Ids of trans that consumed markers on the step
-        this.exitTimes = [] // { transId, exitTime } - exit time of markers from transition
-        this.areMarkersConsumed = false
+        this.time = time ? time : 0 // time of the network
+        this.netState = netState ? netState : {} // object(place id <-> number of markers)
+        this.consumerIds = consumerIds ? consumerIds : [] // Ids of trans that consumed markers on the step
+        this.exitTimes = exitTimes ? exitTimes : [] // { transId, exitTime } - exit time of markers from transition
+        this.areMarkersConsumed = areMarkersConsumed ? areMarkersConsumed : false
 
-        this.getNetState()
+        if (!netState) this.getNetState()
     }
 
     getNetState() {
@@ -22,6 +22,17 @@ module.exports = class Net {
             for (const elem of transition.elems)
                 this.netState[elem.place.id] = elem.place.markers
         // console.dir(this.netState, { depth: null })
+    }
+
+    getNetProps() {
+        return {
+            timeLimit: this.timeLimit,
+            time: this.time,
+            netState: this.netState,
+            consumerIds: this.consumerIds,
+            exitTimes: this.exitTimes,
+            areMarkersConsumed: this.areMarkersConsumed
+        }
     }
 
     launch() {
@@ -35,7 +46,7 @@ module.exports = class Net {
         if (this.time < this.timeLimit)
             this.makeMove()
 
-        return [this.netState, this.time]
+        return this.getNetProps()
     }
 
     // @return ids of transitions that can be executed now
@@ -44,6 +55,7 @@ module.exports = class Net {
         for (const transition of this.network) {
             const inArcsForTrans = transition.elems.filter(
                 elem => elem.arc.direction === 'in')
+            console.dir({ inArcsForTrans }, { depth: null })
             const validMovesForTrans = inArcsForTrans.filter(
                 elem => elem.place.markers >= elem.arc.weight)
 
@@ -55,9 +67,13 @@ module.exports = class Net {
     }
 
     consume() {
+        console.log('\n Net state before Consume:')
+        console.log(this.netState)
+
         let validTransIds = []
         do {
             validTransIds = this.getOnlyValidMoves()
+            console.log('Valid trans ids', validTransIds)
 
             // Resolve conflicts if there are any
             const conflicts = checkForConflicts(validTransIds, this.network)
@@ -65,9 +81,9 @@ module.exports = class Net {
             for (const tr in conflicts)
                 if (conflicts[tr].length) noConflicts = false
 
-            // console.log(`No conflicts: ${noConflicts}`)
-            // console.log(`before: ${validTransIds}`)
-            // console.log(conflicts)
+            console.log(`No conflicts: ${noConflicts}`)
+            console.log(`before: ${validTransIds}`)
+            console.log(conflicts)
 
             // Pre remove all conflict transitions from validTransIds
             for (const key in conflicts)
@@ -110,10 +126,14 @@ module.exports = class Net {
             validTransIds = this.getOnlyValidMoves()
 
         } while (validTransIds.length)
-        console.log(this.exitTimes)
+        console.log('\n Net state after Consume:')
+        console.log(this.netState)
     }
 
     produce() {
+        console.log(`\n\nNet State before Produce:`)
+        console.log(this.netState)
+
         const [ transIds, currTime] = minTransIds(this.exitTimes)
         this.time = currTime
         console.log(`Time: ${this.time}`)
@@ -136,6 +156,9 @@ module.exports = class Net {
                 }
             }
         }
+
+        console.log(`\n\nNet State after Produce:`)
+        console.log(this.netState)
 
         // Remove an executed transition from exitTimes list
         for (const transId of transIds)
