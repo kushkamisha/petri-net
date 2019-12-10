@@ -1,10 +1,10 @@
 'use strict'
 
-window.onbeforeunload = function (e) {
-    const dialogText = 'All unsaved net changes will be lost after refresh'
-    e.returnValue = dialogText
-    return dialogText
-}
+// window.onbeforeunload = function (e) {
+//     const dialogText = 'All unsaved net changes will be lost after refresh'
+//     e.returnValue = dialogText
+//     return dialogText
+// }
 
 function handleClicks() {
     arcDrawingHandler()

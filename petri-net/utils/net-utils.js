@@ -158,16 +158,19 @@ module.exports = {
         return false
     },
 
-    minTransId: exitTimes => {
+    /**
+     * Find all transitions with the closest time in the future
+     */
+    minTransIds: exitTimes => {
         let minVal = Infinity
-        let minId = ''
+        let minIds = []
         for (const elem of exitTimes) {
-            if (elem.exitTime < minVal) {
+            if (elem.exitTime <= minVal) {
                 minVal = elem.exitTime
-                minId = elem.transId
+                minIds.push(elem.transId)
             }
         }
 
-        return [minId, minVal]
+        return [minIds, minVal]
     }
 }
