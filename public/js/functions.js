@@ -7,12 +7,13 @@ function askNetData() {
 
 function netExecute() {
     const timestamp = getCookie('timestamp')
-    socket.send(JSON.stringify({ type: 'launch', ...timestamp && {timestamp} }))
+    socket.send(JSON.stringify({ type: 'net-launch', ...timestamp && {timestamp} }))
 }
 
 function netNext() {
+    if (window.netIsUnsaved) saveInWeb()
     const timestamp = getCookie('timestamp')
-    socket.send(JSON.stringify({ type: 'next', ...timestamp && { timestamp } }))
+    socket.send(JSON.stringify({ type: 'net-next', ...timestamp && { timestamp } }))
 }
 
 function saveNetLocally() {
@@ -34,13 +35,13 @@ function loadFromFile() {
             draw(JSON.parse(e.target.result))
 
             // Save the file to the server & set a cookie
-            const timestamp = Date.now()
+            let timestamp = getOrSetTimestampCookie()
             socket.send(JSON.stringify({
-                type: 'recreate',
+                type: 'net-create',
                 timestamp,
                 data: e.target.result
             }))
-            setCookie('timestamp', timestamp, 7)
+            setCookie('timestamp', timestamp)
         }
     })
 
@@ -66,20 +67,22 @@ function processEvent({ data }) {
     }
 }
 
-function updateNetOnServer() {
-    const timestamp = getCookie('timestamp')
+function saveInWeb() {
+    let timestamp = getOrSetTimestampCookie()
     const net = window.cy.json().elements
     const data = JSON.stringify(net)
 
     socket.send(JSON.stringify({
-        type: 'recreate',
+        type: 'net-create',
         timestamp,
         data
     }))
+    window.netIsUnsaved = false
 }
 
 function updateNet(state) {
     const net = window.cy.json().elements
+    if (!net.nodes) return
     for (const node of net.nodes) {
         const id = node.data.id
         // If this is a place id
@@ -91,30 +94,3 @@ function updateNet(state) {
     return net
 }
 
-/**
- * Set a cookie in the user's browser
- * @param {string} name - Name of the cookie
- * @param {string} value - Value of the cookie
- * @param {integer} days2live - Number of days before the cookie expires
- */
-function setCookie(name, value, days2live) {
-    const d = new Date()
-    d.setTime(d.getTime() + days2live * 24 * 60 * 60 * 1000)
-    document.cookie = `${name}=${value}; expires=${d.toUTCString()}; path=/`
-}
-
-/**
- * Get a cookie from the user's browser
- * @param {string} name - Name of the cookie
- */
-function getCookie(name) {
-    name = `${name}=`
-    const decodedCookie = decodeURIComponent(document.cookie)
-    const ca = decodedCookie.split(';')
-
-    for (let i = 0; i < ca.length; i++) {
-        const c = ca[i].trim()
-        if (c.indexOf(name) === 0) return c.substring(name.length)
-    }
-    return ''
-}

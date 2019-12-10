@@ -5,7 +5,7 @@ const { getRandomWithProbability, minTransIds } = require('./utils/net-utils')
 
 module.exports = class Net {
     constructor({ network, timeLimit }) {
-        this.network = network
+        this.network = network ? network : []
         this.timeLimit = timeLimit ? timeLimit : 1
         
         this.time = 0 // time of the network
@@ -65,9 +65,9 @@ module.exports = class Net {
             for (const tr in conflicts)
                 if (conflicts[tr].length) noConflicts = false
 
-            console.log(`No conflicts: ${noConflicts}`)
-            console.log(`before: ${validTransIds}`)
-            console.log(conflicts)
+            // console.log(`No conflicts: ${noConflicts}`)
+            // console.log(`before: ${validTransIds}`)
+            // console.log(conflicts)
 
             // Pre remove all conflict transitions from validTransIds
             for (const key in conflicts)
@@ -116,6 +116,9 @@ module.exports = class Net {
     produce() {
         const [ transIds, currTime] = minTransIds(this.exitTimes)
         this.time = currTime
+        console.log(`Time: ${this.time}`)
+        console.log('\nTransitions to execute')
+        console.log(transIds)
 
         // Execute all transitions with the smallest exit time
         for (const item of this.network) {

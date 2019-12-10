@@ -1,10 +1,11 @@
 'use strict'
 
-// window.onbeforeunload = function (e) {
-//     const dialogText = 'All unsaved net changes will be lost after refresh'
-//     e.returnValue = dialogText
-//     return dialogText
-// }
+window.onbeforeunload = function (e) {
+    // const dialogText = 'All unsaved net changes will be lost after refresh'
+    // e.returnValue = dialogText
+    // return dialogText
+    if (window.netIsUnsaved) saveInWeb()
+}
 
 function handleClicks() {
     arcDrawingHandler()
@@ -17,7 +18,7 @@ function handleClicks() {
         if (isArc(trg)) return arcClick(e)
     })
 
-    window.addEventListener('keypress', keyHandler, false)
+    window.addEventListener('keydown', keyHandler)
     window.addEventListener('keyup', () => {
         window.pressedKey = undefined
         window.cy.autoungrabify(false)
@@ -41,6 +42,7 @@ function backgroundClick(e) {
                     y: e.renderedPosition.y,
                 },
             }])
+            window.netIsUnsaved = true
             break
         case 'w':
             cy.add([{
@@ -54,6 +56,7 @@ function backgroundClick(e) {
                     y: e.renderedPosition.y,
                 },
             }])
+            window.netIsUnsaved = true
             break
     }
 
@@ -80,6 +83,7 @@ function transitionClick(e) {
 
     // update an image of the net
     draw(net)
+    window.netIsUnsaved = true
 }
 
 function placeClick(e) {
@@ -103,6 +107,7 @@ function placeClick(e) {
 
     // update an image of the net
     draw(net)
+    window.netIsUnsaved = true
 }
 
 function arcClick(e) {
@@ -127,6 +132,7 @@ function arcClick(e) {
 
     // update an image of the net
     draw(net)
+    window.netIsUnsaved = true
 }
 
 function arcDrawingHandler() {
@@ -215,4 +221,6 @@ function arcDrawingHandler() {
 function checkCreatedArc(src, trg, added) {
     if (!isArcValid(src, trg))
         window.cy.remove(added)
+    else
+        window.netIsUnsaved = true
 }

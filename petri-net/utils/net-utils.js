@@ -14,6 +14,7 @@ module.exports = {
         const places = []
         const transIds = []
 
+        if (!data.nodes) return
         for (const node of data.nodes) {
             if (node.data.type === 'transition') {
                 transIds.push(node.data.id)
@@ -28,6 +29,7 @@ module.exports = {
                 }))
         }
 
+        if (!data.edges) return
         for (const arc of data.edges) {
             // Arrow to the transition
             if (transIds.includes(arc.data.target)) {
