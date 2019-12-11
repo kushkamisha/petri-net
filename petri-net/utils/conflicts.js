@@ -2,8 +2,7 @@
 
 const {
     intersectionOfArrays,
-    getRandomWithProbability,
-    getObjectFromNetById
+    getRandomWithProbability
 } = require('./net-utils')
 
 const getConflictsResolvingMethod = (confs, network) => {

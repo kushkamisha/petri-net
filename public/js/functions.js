@@ -74,7 +74,7 @@ function processEvent({ data }) {
             console.log(window.props)
             net = updateNet(state)
             draw(net)
-            time.innerText = msg.time
+            time.innerText = msg.props.time
             break
     }
 }
