@@ -1,11 +1,7 @@
 'use strict'
 
-window.onbeforeunload = function (e) {
-    // const dialogText = 'All unsaved net changes will be lost after refresh'
-    // e.returnValue = dialogText
-    // return dialogText
-    if (window.netIsUnsaved) saveInWeb()
-}
+// Save changes before page reloading
+window.onbeforeunload = function (e) { if (window.netIsUnsaved) saveInWeb()}
 
 function handleClicks() {
     arcDrawingHandler()
@@ -29,8 +25,8 @@ function handleClicks() {
 
 function backgroundClick(e) {
     console.log('background click')
-    switch (window.pressedKey) {
-        case 'q':
+
+    if (window.pressedKey === 'q' || isActiveButton('place')) {
             cy.add([{
                 group: 'nodes',
                 data: {
@@ -43,8 +39,7 @@ function backgroundClick(e) {
                 },
             }])
             window.netIsUnsaved = true
-            break
-        case 'w':
+    } else if (window.pressedKey === 'w' || isActiveButton('transition')) { 
             cy.add([{
                 group: 'nodes',
                 data: {
@@ -57,15 +52,16 @@ function backgroundClick(e) {
                 },
             }])
             window.netIsUnsaved = true
-            break
     }
 
     console.log(cy.json().elements)
 }
 
 function transitionClick(e) {
+    if (isActiveButton('remove')) deleteElement()
+
     // Only if in edit elements mode
-    if (window.pressedKey !== 'r') return
+    if (window.pressedKey !== 'r' && !isActiveButton('edit')) return
     window.pressedKey = undefined
 
     let delay = prompt('Enter the time delay for the transition', 1)
@@ -87,8 +83,10 @@ function transitionClick(e) {
 }
 
 function placeClick(e) {
+    if (isActiveButton('remove')) deleteElement()
+
     // Only if in edit elements mode
-    if (window.pressedKey !== 'r') return
+    if (window.pressedKey !== 'r' && !isActiveButton('edit')) return
     window.pressedKey = undefined
 
     let markers = prompt('Enter the number of markers', 1)
@@ -111,8 +109,10 @@ function placeClick(e) {
 }
 
 function arcClick(e) {
+    if (isActiveButton('remove')) deleteElement()
+
     // Only if in edit elements mode
-    if (window.pressedKey !== 'r') return
+    if (window.pressedKey !== 'r' && !isActiveButton('edit')) return
     window.pressedKey = undefined
 
     let weight = prompt('Enter the weight of the arc', 1)
@@ -132,6 +132,24 @@ function arcClick(e) {
 
     // update an image of the net
     draw(net)
+    window.netIsUnsaved = true
+}
+
+function toggleArcMode() {
+    if (!isActiveButton('arc')) {
+        console.log('active arc')
+        window.eh.enable()
+        window.eh.enableDrawMode()
+    } else {
+        console.log('inactive arc')
+        window.cy.autoungrabify(false)
+        window.eh.disable()
+    }
+}
+
+function deleteElement() {
+    const elems = cy.$(':selected')
+    elems.forEach(elem => cy.remove(elem))
     window.netIsUnsaved = true
 }
 

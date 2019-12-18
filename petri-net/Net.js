@@ -7,6 +7,8 @@ module.exports = class Net {
     constructor({ network, timeLimit, time, netState, consumerIds, exitTimes, areMarkersConsumed }) {
         this.network = network ? network : []
         this.timeLimit = timeLimit ? timeLimit : 1
+
+        this.iterationsLimit = 50
         
         this.time = time ? time : 0 // time of the network
         this.netState = netState ? netState : {} // object(place id <-> number of markers)
@@ -36,7 +38,7 @@ module.exports = class Net {
     }
 
     launch() {
-        while(this.time < this.timeLimit)
+        while(this.time < this.timeLimit && this.iterationsLimit > 0)
             this.makeMove()
 
         return [this.netState, this.time]
@@ -69,6 +71,7 @@ module.exports = class Net {
         console.log('\n\nconsumption\n')
         console.log(`Time: ${this.time}`)
         let validTransIds = []
+        let iterations = 10
         do {
             // validTransIds = this.getOnlyValidMoves()
             console.log('Valid trans ids', validTransIds)
@@ -120,7 +123,8 @@ module.exports = class Net {
             validTransIds = this.getOnlyValidMoves()
             console.log(validTransIds)
 
-        } while (validTransIds.length)
+            iterations--
+        } while (validTransIds.length && iterations > 0)
     }
 
     produce() {
@@ -155,6 +159,8 @@ module.exports = class Net {
     makeMove() {
         this.areMarkersConsumed ? this.produce() : this.consume()
         this.areMarkersConsumed = !this.areMarkersConsumed
+
+        this.iterationsLimit--
 
         console.log('Consumer ids: ', this.consumerIds)
         console.log('Exit times: ', this.exitTimes)
