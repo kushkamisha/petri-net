@@ -13,7 +13,13 @@ function netExecute() {
 function netNext() {
     if (window.netIsUnsaved) saveInWeb()
     const timestamp = getCookie('timestamp')
-    socket.send(JSON.stringify({ type: 'net-next', ...timestamp && { timestamp } }))
+    console.log('net-next sent to server props:')
+    console.log(window.props)
+    socket.send(JSON.stringify({
+        type: 'net-next',
+        ...timestamp && { timestamp },
+        props: window.props
+    }))
 }
 
 function saveNetLocally() {
@@ -55,14 +61,20 @@ function processEvent({ data }) {
     
     switch(msg.type) {
         case 'net-data':
-            net = JSON.parse(msg.data)
+            net = JSON.parse(msg.data.network)
+            window.props = msg.data.props
+            console.log('net-data response props:')
+            console.log(window.props)
             draw(net)
             break
         case 'net-next':
-            const state = msg.state
+            const state = msg.props.netState
+            window.props = msg.props
+            console.log('net-next received from server props:')
+            console.log(window.props)
             net = updateNet(state)
             draw(net)
-            time.innerText = msg.time
+            time.innerText = msg.props.time
             break
     }
 }
