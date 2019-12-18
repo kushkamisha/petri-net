@@ -8,6 +8,10 @@ function isTransition(trg) { return trg.data('type') === 'transition' }
 
 function isBackground(trg) { return trg === window.cy }
 
+function isActiveButton(id) {
+    return document.getElementById(id).classList.contains('is-active')
+}
+
 function isArcValid(src, trg) {
     return isTransition(src) && isPlace(trg) || isPlace(src) && isTransition(trg)
 }
@@ -71,9 +75,7 @@ function keyHandler(e) {
         case key.delete:
             window.pressedKey = 'backspace'
             console.log('backspace')
-            const elems = cy.$(':selected')
-            elems.forEach(elem => cy.remove(elem))
-            window.netIsUnsaved = true
+            deleteElement()
             break
     }
 }

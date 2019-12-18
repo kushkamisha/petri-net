@@ -16,6 +16,7 @@
     <link href="styles/main.css" rel="stylesheet" />
     <link href="styles/header.css" rel="stylesheet" />
     <link href="styles/stats.css" rel="stylesheet" />
+    <link href="styles/button-row.css" rel="stylesheet" />
 
     <title>Petri Net</title>
 </head>
@@ -30,6 +31,15 @@
                 <nav>
                     <div class="nav-mobile"><a id="nav-toggle" href="#"><span></span></a></div>
                     <ul class="nav-list">
+                        <li>
+                            <div class="button-row">
+                                <button class="button" id="place">Place</button>
+                                <button class="button" id="transition">Transition</button>
+                                <button class="button" id="arc" onclick="toggleArcMode()">Arc</button>
+                                <button class="button" id="edit">Edit</button>
+                                <button class="button" id="remove" onclick="deleteElement()">Remove</button>
+                            </div>
+                        </li>
                         <li>
                             <a href="#">Net</a>
                             <ul class="nav-dropdown">

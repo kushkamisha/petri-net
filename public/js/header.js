@@ -19,5 +19,19 @@
         $('#nav-toggle').on('click', function () {
             this.classList.toggle('active');
         });
+
+        const buttonRow = $('.button-row');
+        let activeButton = buttonRow.find('.button.is-active');
+
+        buttonRow.on('click', '.button', function (event) {
+            // deactivate previous button
+            
+            activeButton.toggleClass('is-active');
+            // set & activate new button
+            if (activeButton.attr('id') == $(this).attr('id')) return;
+            activeButton = $(this);
+            activeButton.addClass('is-active');
+        });
+
     }); // end DOM ready
 })(jQuery); // end jQuery
