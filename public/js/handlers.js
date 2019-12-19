@@ -15,12 +15,18 @@ function handleClicks() {
     })
 
     window.addEventListener('keydown', keyHandler)
-    window.addEventListener('keyup', () => {
-        window.pressedKey = undefined
-        window.cy.autoungrabify(false)
-        window.eh.disable()
-    }, false)
+    window.addEventListener('keyup', keyUpHandler, false)
+}
 
+function keyUpHandler() {
+    $('#place').removeClass('is-active')
+    $('#transition').removeClass('is-active')
+    $('#arc').removeClass('is-active')
+    $('#edit').removeClass('is-active')
+
+    window.pressedKey = undefined
+    window.cy.autoungrabify(false)
+    window.eh.disable()
 }
 
 function backgroundClick(e) {
@@ -62,7 +68,7 @@ function transitionClick(e) {
 
     // Only if in edit elements mode
     if (window.pressedKey !== 'r' && !isActiveButton('edit')) return
-    window.pressedKey = undefined
+    keyUpHandler()
 
     let delay = prompt('Enter the time delay for the transition', 1)
     if (delay == null) return;
@@ -87,7 +93,7 @@ function placeClick(e) {
 
     // Only if in edit elements mode
     if (window.pressedKey !== 'r' && !isActiveButton('edit')) return
-    window.pressedKey = undefined
+    keyUpHandler()
 
     let markers = prompt('Enter the number of markers', 1)
     if (markers == null) return;
@@ -113,7 +119,7 @@ function arcClick(e) {
 
     // Only if in edit elements mode
     if (window.pressedKey !== 'r' && !isActiveButton('edit')) return
-    window.pressedKey = undefined
+    keyUpHandler()
 
     let weight = prompt('Enter the weight of the arc', 1)
     if (weight == null) return;

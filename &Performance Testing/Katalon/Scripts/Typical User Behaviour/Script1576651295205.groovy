@@ -16,17 +16,45 @@ import com.kms.katalon.core.windows.keyword.WindowsBuiltinKeywords as Windows
 import internal.GlobalVariable as GlobalVariable
 import org.openqa.selenium.Keys as Keys
 
-WebUI.openBrowser('http://localhost:3000')
+WebUI.openBrowser('')
 
-WebUI.click(findTestObject('Object Repository/Page_Petri Net/a_Make a Move'))
+WebUI.navigateToUrl('http://176.37.12.50:5198/')
 
-WebUI.click(findTestObject('Object Repository/Page_Petri Net/a_Make a Move'))
+WebUI.click(findTestObject('Page_Petri Net/a_Make a Move'))
 
-WebUI.click(findTestObject('Object Repository/Page_Petri Net/a_Make a Move'))
+WebUI.click(findTestObject('Page_Petri Net/a_Make a Move'))
 
-WebUI.click(findTestObject('Object Repository/Page_Petri Net/canvas'))
+WebUI.click(findTestObject('Page_Petri Net/a_Make a Move'))
 
-WebUI.click(findTestObject('Object Repository/Page_Petri Net/canvas'))
+WebUI.click(findTestObject('Page_Petri Net/a_Make a Move'))
+
+WebUI.click(findTestObject('Page_Petri Net/a_Make a Move'))
+
+WebUI.click(findTestObject('Page_Petri Net/a_Make a Move'))
+
+WebUI.click(findTestObject('Page_Petri Net/a_Make a Move'))
+
+WebUI.click(findTestObject('Page_Petri Net/a_Make a Move'))
+
+WebUI.click(findTestObject('Page_Petri Net/a_Make a Move'))
+
+WebUI.click(findTestObject('Page_Petri Net/a_Make a Move'))
+
+WebUI.click(findTestObject('Page_Petri Net/a_Make a Move'))
+
+WebUI.click(findTestObject('Page_Petri Net/a_Make a Move'))
+
+WebUI.click(findTestObject('Page_Petri Net/button_Place'))
+
+WebUI.click(findTestObject('Page_Petri Net/canvas'))
+
+WebUI.click(findTestObject('Page_Petri Net/canvas'))
+
+WebUI.click(findTestObject('Page_Petri Net/canvas'))
+
+WebUI.click(findTestObject('Page_Petri Net/a_Make a Move'))
+
+WebUI.click(findTestObject('Page_Petri Net/a_Make a Move'))
 
 WebUI.closeBrowser()
 

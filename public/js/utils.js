@@ -50,18 +50,21 @@ function keyHandler(e) {
         case key.qCAPS:
         case key.qUACAPS:
             window.pressedKey = 'q'
+            $('#place').addClass('is-active')
             break
         case key.w:
         case key.wUA:
         case key.wCAPS:
         case key.wUACAPS:
             window.pressedKey = 'w'
+            $('#transition').addClass('is-active')
             break
         case key.e:
         case key.eUA:
         case key.eCAPS:
         case key.eUACAPS:
             window.pressedKey = 'e'
+            $('#arc').addClass('is-active')
             window.eh.enable()
             window.eh.enableDrawMode()
             break
@@ -70,6 +73,7 @@ function keyHandler(e) {
         case key.rCAPS:
         case key.rUACAPS:
             window.pressedKey = 'r'
+            $('#edit').addClass('is-active')
             break
         case key.backspace:
         case key.delete:
