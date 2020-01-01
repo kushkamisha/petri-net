@@ -144,7 +144,7 @@ module.exports = class Net {
 
                 for (const elem of item.elems) {
                     if (elem.arc.direction === 'out') {
-                        elem.place.markers += elem.arc.weight
+                        this.increaseNumOfMarkers(elem.place.id, elem.arc.weight)
                         this.netState[elem.place.id] = elem.place.markers
                     }
                 }
@@ -172,6 +172,15 @@ module.exports = class Net {
                 if (elem.place.id === id)
                     elem.place.markers -= value
             } 
+        }
+    }
+
+    increaseNumOfMarkers(id, value) {
+        for (const item of this.network) {
+            for (const elem of item.elems) {
+                if (elem.place.id === id)
+                    elem.place.markers += value
+            }
         }
     }
 }
