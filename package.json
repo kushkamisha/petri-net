@@ -1,6 +1,6 @@
 {
   "name": "petri-net",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Stochastic Petri net process with GUI output",
   "main": "index.js",
   "scripts": {
