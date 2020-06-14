@@ -1,5 +1,7 @@
 .DS_Store
 **/node_modules/**
 data/**/*.json
-!data/task-*.json
+!data/client/default.json
+!data/server/default.json
+!data/config.json
 **/.vs_code/**
