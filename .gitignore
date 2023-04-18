@@ -5,3 +5,5 @@ data/**/*.json
 !data/server/default.json
 !data/config.json
 **/.vs_code/**
+*.log
+*.code-workspace
